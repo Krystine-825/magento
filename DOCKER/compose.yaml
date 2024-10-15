@@ -1,0 +1,45 @@
+services:
+  app:
+    build: ./images/nginx
+    ports:
+      - "80:8000"
+      - "443:8443"
+    volumes: &appvolumes
+      - appdata:/var/www/html
+      - sockdata:/sock
+      - ssldata:/etc/nginx/certs
+    
+
+  phpfpm:
+    build: ./images/php
+    volumes: *appvolumes
+    
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - "MYSQL_HOST=db"
+      - "MYSQL_ROOT_PASSWORD=magento"
+      - "MYSQL_DATABASE=magento"
+      - "MYSQL_USER=magento"
+      - "MYSQL_PASSWORD=magento"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  elasticsearch:
+    image: elasticsearch:7.17.24
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "ES_HOST=elasticsearch"
+      - "ES_PORT=9200"
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+
+volumes:
+  appdata:
+  dbdata:
+  sockdata:
+  ssldata:
