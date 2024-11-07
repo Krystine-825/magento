@@ -37,7 +37,7 @@ services:
       - "ES_PORT=9200"
       - "discovery.type=single-node"
       - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
-      
+  
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
